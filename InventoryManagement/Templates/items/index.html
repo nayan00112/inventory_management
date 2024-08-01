@@ -5,6 +5,29 @@
 {% block head %}
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
 <link rel="stylesheet" href="{% static 'css/form.css' %}">
+<style>
+    .box{
+        width: 8cm;
+        padding: 3rem;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        outline: 1px solid gray;
+    }
+    .p_box{
+        margin-top: 2rem;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+    }
+    .number{
+        font-size: 4rem;
+        font-weight: 100;
+    }
+</style>
 {% endblock head %}
 
 {% block body %}
@@ -17,6 +40,21 @@
     <p>
         Our Inventory Management system provides a robust platform for efficient stock control. Users can effortlessly categorize products, facilitating streamlined organization. By meticulously tracking product details and sales, businesses can make informed decisions. The system empowers users to maintain optimal stock levels by allowing for the addition and removal of products as needed, ensuring accurate inventory data at all times.
     </p>
+
+    <div class="p_box">
+        <div class="box">
+            <b>Categories</b>
+            <span class="number">
+                {{categories}}
+            </span>
+        </div>
+        <div class="box">
+            <b>Products</b>
+            <span class="number">
+                {{products}}
+            </span>
+        </div>
+    </div>
     
     
     {% else %}

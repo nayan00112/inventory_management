@@ -7,8 +7,10 @@ import json
 # Create your views here.
 def home(request):
     active_home = "active"
+    c = Categories.objects.count()
+    p = Products.objects.count()
 
-    context = {'active_home':active_home}
+    context = {'active_home':active_home, 'categories':c,"products":p}
     return render(request, 'items/index.html', context)
 
 def categories(request):

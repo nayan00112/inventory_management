@@ -6,7 +6,10 @@
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
 <script>
     function printbill() {
+        let b = document.getElementsByTagName('body')[0].innerHTML
+        document.getElementsByTagName('body')[0].innerHTML = document.getElementById('priantable').innerHTML
         window.print()
+        document.getElementsByTagName('body')[0].innerHTML = b
     }
 
     window.addEventListener('load', jsontoobj)
@@ -20,10 +23,10 @@
 {% endblock head %}
 
 {% block body %}
-<div class="cont">
+<div class="cont" id="priantable">
     <div class="flexbox">
         <h1 class="heading">Invoices</h1>
-        <button class="editbtn" onclick="printbill()">Print</button>
+        <button class="editbtn" onclick="printbill()"style='padding:0.4rem 1.4rem;'>Print</button>
     </div>
     <div>
         <b>Date_Time:</b> {{salse_details.Date_Time}}<br>

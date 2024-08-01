@@ -40,9 +40,11 @@
                 <td>{{s.Total_items}}</td>
                 <td>{{s.Total_ammount}}</td>
           
-                <td style='display: flex; align-items: center; justify-content: center;'>
+                <td>
+                    <div style='display: flex; align-items: center; justify-content: center;'>
                     <button class="editbtn" onclick="window.location.href='/Invoices_details/{{s.id}}/'">Details</button>
                     <button class="deletebtn" onclick="deleteconform({{s.id}})">Delete</button>
+                </div>
                 </td>
             </tr>
             {% endfor %}
