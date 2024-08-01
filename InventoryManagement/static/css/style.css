@@ -1,0 +1,80 @@
+.cont {
+    max-width: 22cm;
+    margin: auto;
+    padding: 4rem 0;
+}
+
+.flexbox {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.flexbox .btn {
+    background-color: #9F70FD;
+    color: white;
+    padding: 0.4rem 0.6rem;
+    border: 0;
+    border-radius: 4px;
+}
+
+.flexbox .btn:hover {
+    background-color: #7F27FF;
+}
+
+.heading {
+    font-weight: 300;
+    margin: 1rem 0;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+
+}
+
+.table th {
+    font-weight: 400;
+    background-color: #9F70FD;
+    color: white;
+}
+
+.table th,
+.table td {
+    border: 1px solid gray;
+    padding: 0.5rem;
+}
+.table td{
+    font-weight: 400;
+    padding: 0.4rem;
+}
+
+.editbtn{
+    background-color: green;
+    color:white;
+    border: 0;
+    padding: 0.3rem;
+    border-radius: 4px;
+}
+.deletebtn{
+    background-color: rgb(255, 0, 0);
+    color:white;
+    border: 0;
+    padding: 0.3rem 0.5rem;
+    border-radius: 4px;
+}
+
+
+.center{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.divbox{
+    border: 1px solid gray;
+    padding: 1rem;
+    border-radius: 4px;
+}

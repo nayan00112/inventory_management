@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{title}}{% endblock title %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<link rel="stylesheet" href="{% static 'css/form.css' %}">
+{% endblock head %}
+
+{% block body %}
+<div class="cont">
+    <div class="flexbox">
+        <h1 class="heading">Edit Inventory</h1>
+        <button class="btn" onclick="window.location.href = '/inventory'">Back to Products</button>
+    </div>
+    
+    <form class='form' method="post">
+        {% csrf_token %}
+        <b>Product: {{i.Products.Name}}</b>
+        <label for="as">Available Stock</label>
+        <input type="number" id="as" name="as" value='{{i.Available_Stock}}'>
+        <input type="submit" value="Submit">
+    </form>
+</div>
+{% endblock body %}

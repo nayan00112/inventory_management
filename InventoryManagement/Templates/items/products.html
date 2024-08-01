@@ -1,0 +1,55 @@
+{% extends "base.html" %}   
+{% load static %}
+{% block title %}{{title}}{% endblock title %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<script>
+    function deleteconform(product_id){
+        a = confirm("Are you sure to delete?")
+        if (a == true){
+            window.location.href='/delete_product/'+product_id+'/'
+        }
+    }
+</script>
+{% endblock head %}
+{% block body %}
+<div class="cont">
+    <div class="flexbox">
+        <h1 class="heading">Product Categories</h1>
+        <button class="btn" onclick="window.location.href = '/add_product'">Add Product</button>
+    </div>
+    <table class="table">
+        <tr>
+            <th>ID</th>
+            <th>Date Time</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Categorie</th>
+            <th>Action</th>
+        </tr>
+        <tr>
+            {% if products %}
+            {% for product in products %}
+            <tr>
+            <td style='text-align: center;'>{{product.id}}</td>
+            <td style='text-align: center;'>{{product.Date_Time}}</td>
+            <td>{{product.Name}}</td>
+            <td>{{product.Description}}</td>
+            <td>{{product.Price}}</td>
+            <td style='text-align: center;'>{{product.Status}}</td>
+            <td style='text-align: center;'>{{product.Categorie}}</td>
+            <td class="center">
+                <button class="editbtn" onclick="window.location.href='/edit_product/{{product.id}}/'">Edit</button>
+                <button class="deletebtn" onclick="deleteconform({{product.id}})">Delete</button>
+            </td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <td style='color:red; padding: 1rem; text-align: center;' colspan="8">Empty</td>
+            {% endif %} 
+        </tr>
+    </table>
+</div>
+{% endblock body %}

@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Inventory Management{% endblock title %} | Inventory Management</title>
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    {% block head %}
+    {% endblock head %}
+</head>
+<body>
+    <nav class="navbar">
+        
+        {% if user.is_authenticated %}
+        <ul>
+            <li class = '{% if active_home %}active{% endif %}' onclick="window.location.href = '/'">Home</li>
+            <li class = '{% if active_categories %}active{% endif %}' onclick="window.location.href = '/categories'">Categories</li>
+            <li class = '{% if active_products %}active{% endif %}' onclick="window.location.href = '/products'">Products</li>
+            <li class = '{% if active_inventory %}active{% endif %}' onclick="window.location.href = '/inventory'">Inventory</li>
+            <li class = '{% if active_sales %}active{% endif %}' onclick="window.location.href = '/sales'">Sales</li>
+            <li class = '{% if active_invoices %}active{% endif %}' onclick="window.location.href = '/invoices'">Invoices</li>
+        </ul>
+        <ul>
+            <li>Hello {{user.username}}</li>
+            <li onclick="window.location.href = '/account/logout'">Logout</li>
+        </ul>
+        {% else %}
+        <ul style='margin: auto;'>
+            <li><h1>Inventory Management</h1></li>
+        </ul>
+        {% endif %}
+    </nav>
+    {% block body %}
+      
+    {% endblock body %}
+</body>
+</html>

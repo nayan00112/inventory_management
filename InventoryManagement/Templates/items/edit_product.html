@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{title}}{% endblock title %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<link rel="stylesheet" href="{% static 'css/form.css' %}">
+{% endblock head %}
+
+{% block body %}
+<div class="cont">
+    <div class="flexbox">
+        <h1 class="heading">Edit Product</h1>
+        <button class="btn" onclick="window.location.href = '/products'">Back to Products</button>
+    </div>
+    {% if catory %}
+    <form class='form' method="post">
+        {% csrf_token %}
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" value='{{p.Name}}'>
+        <label for="description">Description:</label>
+        <textarea id="description" name="description">{{p.Description}}</textarea>
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="price" value='{{p.Price}}'>
+        <div>
+            <label for="status">Status:</label>
+            <input type="checkbox" id="status" name="status" {% if p.Status %}checked {% endif %}> Active
+        </div>
+        <label for="categorie">Categorie:</label>
+        <select id="categorie" name="categorie">
+            {% for cat in catory %}
+            <option value="{{cat.Name}}">{{cat.Name}}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Submit">
+        
+        <hr>
+
+    </form>
+    {% else %}
+    <b style="color: orange;">Please Enter Categorie first.</b>
+    {% endif %}
+
+</div>
+{% endblock body %}

@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{title}}{% endblock title %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<link rel="stylesheet" href="{% static 'css/form.css' %}">
+<script>
+    let a = 1
+    let sum = 0
+    function change_qtn(inp_id, total_id, price_element) {
+        try {
+            let price = document.getElementById(price_element).innerHTML
+            let q = document.getElementById(inp_id).value
+            let ans = Number(price) * Number(q);
+            document.getElementById(total_id).innerHTML = ans
+        }
+        catch (e) {
+            console.log("error", e);
+        }
+
+        try {
+            let pl = document.getElementsByClassName('total_class')
+            // console.log(pl.length);
+            l = pl.length
+            while (l > 0) {
+                sum += Number(pl[l - 1].innerHTML)
+                l -= 1
+            }
+            document.getElementById('total_price').innerHTML = sum
+            sum = 0
+        }
+        catch (e) {
+        }
+    }
+
+
+    let count = 1
+    function add_product_to_list() {
+        let i = document.getElementById('product').value;
+        let itm = i.split('|')
+        if (itm[0] == "-- SELECT --") {
+        }
+        else {
+            let a = document.createElement('tr')
+            a.innerHTML = `<td id="p${count}">${count}</td><td><input type="number" value="0"  onkeyup="change_qtn('inp${count}','total${count}','price_${count}')" id="inp${count}" class = 'td_qtn'></td><td class = 'td_product'>${itm[0]}</td><td id="price_${count}" class = 'td_price'>${itm[1]}</td><td class='total_class' id="total${count}">0</td>`
+            count += 1
+            document.getElementById('table_head').appendChild(a)
+            let r_element = document.getElementsByClassName('p_options')
+            re_len = r_element.length
+            while (re_len > 0) {
+                if (r_element[re_len - 1].innerHTML == itm[0]) {
+                    r_element[re_len - 1].remove()
+                }
+                re_len -= 1
+            }
+        }
+        return 0
+    }
+
+    function get_sale_product_list() {
+        table_data_qtn = document.getElementsByClassName('td_qtn')
+        table_data_product = document.getElementsByClassName('td_product')
+        table_data_price = document.getElementsByClassName('td_price')
+        table_data_total = document.getElementsByClassName('total_class')
+
+        le = table_data_qtn.length
+        // console.log(le);
+
+        let ar_list = []
+
+        while (le > 0) {
+            ar_list.push(`{"qtn":"${table_data_qtn[le - 1].value}", 
+            "product":"${table_data_product[le - 1].innerHTML}",
+            "price":"${table_data_price[le - 1].innerHTML}",
+            "total_price":${table_data_total[le - 1].innerHTML}
+            }`)
+            le -= 1
+        }
+
+        // console.log(ar_list);
+
+        let table_data = {
+            "name": document.getElementById('customer_name').value,
+            "items": JSON.stringify(ar_list)
+        }
+
+        // console.log(table_data);
+        return JSON.stringify(table_data)
+
+    }
+
+    function dcrement_products_items(productname, qtl){
+        var xhr = new XMLHttpRequest();
+                var url = "/decrement_product";
+                xhr.open("POST", url, true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+                var csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                xhr.setRequestHeader("X-CSRFToken", csrfToken);
+
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        
+                    }
+                };
+
+                var data = "product=" + encodeURIComponent(productname.innerHTML) + "&qtl=" + encodeURIComponent(qtl.value);
+                xhr.send(data);
+    }
+
+
+    function qtn_counter() {
+        total_qtn = 0
+        try {
+            let pli = document.getElementsByClassName('td_product')
+            let pl = document.getElementsByClassName('td_qtn')
+            l = pl.length
+            while (l > 0) {
+                total_qtn += Number(pl[l - 1].value)
+                dcrement_products_items(pli[l - 1], pl[l - 1])
+                l -= 1
+            }
+            return total_qtn
+        }
+        catch (e) {
+        }
+    }
+
+    function preparedsubmit() {
+        if (document.getElementById("total_price").innerHTML != 0) {
+            let c_name = document.getElementById("customer_name")
+            console.log(c_name.value);
+            if (c_name.value == "") {
+                alert("Plase enter your name")
+                document.getElementById('customer_name').focus()
+            }
+            else {
+                let obj = new Object();
+                obj.customer_name = c_name.value;
+                obj.total_price = document.getElementById("total_price").innerHTML;
+                obj.total_qtn = qtn_counter()
+                obj.sale_list_json = get_sale_product_list()
+                console.log(obj.sale_list_json)
+                // submit part:
+                var xhr = new XMLHttpRequest();
+                var url = "{% url 'submit_form' %}";
+                xhr.open("POST", url, true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+                var csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                xhr.setRequestHeader("X-CSRFToken", csrfToken);
+
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        alert(xhr.responseText);
+                    }
+                };
+
+                var data = "customer_name=" + encodeURIComponent(obj.customer_name) + "&total_price=" + encodeURIComponent(obj.total_price) + "&total_qtn=" + encodeURIComponent(obj.total_qtn) + "&sale_list_json=" + encodeURIComponent(obj.sale_list_json);
+                xhr.send(data);
+            }
+        }
+        else {
+            alert("Please enter items with quentity.")
+        }
+    }
+</script>
+{% endblock head %}
+
+{% block body %}
+<div class="cont">
+    <div class="flexbox">
+        <h1 class="heading">Sales Transaction</h1>
+        <button class="btn" onclick="preparedsubmit()">Submit</button>
+    </div>
+    {% if products %}
+    <form class='form' method="post">
+        {% csrf_token %}
+        <label for="customer_name">Customer Name</label>
+        <input type="text" name="customer_name" id="customer_name" required>
+        <h2 class="heading">Items</h2>
+        <label for="product">Product</label>
+        <div style="display: grid; grid-template-columns: 3fr 1fr;">
+            <select name="product" id="product">
+                <option value="-- SELECT --">-- SELECT --</option>
+                {% for product in products %}
+                <option value="{{product}}|{{product.Price}}" class="p_options">{{product}}</option>
+                {% endfor %}
+            </select>
+            <button type="button" onclick="add_product_to_list()" id='add_product'>Add Product</button>
+        </div>
+    </form>
+    <div>
+        <table class="table" style="margin-top: 2rem;">
+            <thead>
+                <tr>
+                    <th>Sr. No.</th>
+                    <th>QTY</th>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody id="table_head">
+            </tbody>
+            <tr>
+                <td colspan="4" style="text-align: center;"><b>Total</b></td>
+                <td id="total_price" style="text-align: center;">0</td>
+            </tr>
+        </table>
+    </div>
+    {% else %}
+    <b style="color: orange;">Please enter product first.</b>
+    {% endif %}
+</div>
+{% endblock body %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{title}}{% endblock title %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<link rel="stylesheet" href="{% static 'css/form.css' %}">
+{% endblock head %}
+
+{% block body %}
+<div class="cont">
+    <div class="flexbox">
+        <h1 class="heading">Add Categorie</h1>
+        <button class="btn" onclick="window.location.href = '/categories'">Back to Categories</button>
+    </div>
+    <form class='form' method="post">
+        {% csrf_token %}
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" required></textarea>
+        <div>
+            <label for="status">Status:</label>
+            <input type="checkbox" id="status" name="status" checked> Active
+        </div>
+        <input type="submit" value="Submit">
+    </form>
+
+</div>
+{% endblock body %}

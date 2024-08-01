@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{title}}{% endblock title %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<script>
+    function deleteconform(categorie_id){
+        a = confirm("Are you sure to delete?")
+        if (a == true){
+            window.location.href='/delete_categories/'+categorie_id+'/'
+        }
+    }
+</script>
+{% endblock head %}
+
+{% block body %}
+<div class="cont">
+    <div class="flexbox">
+        <h1 class="heading">Categories</h1>
+        <button class="btn" onclick="window.location.href = '/add_categories'">Add Categorie</button>
+    </div>
+    <table class="table">
+        <tr>
+            <th>ID</th>
+            <th>Date Time</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+        <tr>
+            {% if categories %}
+            {% for categorie in categories %}
+            <tr>
+            <td style='text-align: center;'>{{categorie.id}}</td>
+            <td style='text-align: center;'>{{categorie.Date_Time}}</td>
+            <td>{{categorie.Name}}</td>
+            <td>{{categorie.Description}}</td>
+            <td style='text-align: center;'>{{categorie.Status}}</td>
+            <td class="center">
+                <button class="editbtn" onclick="window.location.href='/edit_categories/{{categorie.id}}/'">Edit</button>
+                <button class="deletebtn" onclick="deleteconform({{categorie.id}})">Delete</button>
+            </td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <td style='color:red; padding: 1rem; text-align: center;' colspan="6">Empty</td>
+            {% endif %} 
+        </tr>
+    </table>
+</div>
+{% endblock body %}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{title}}{% endblock title %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<script>
+    function printbill() {
+        window.print()
+    }
+
+    window.addEventListener('load', jsontoobj)
+    function jsontoobj(){
+        let a = document.getElementById('jsonstr').innerHTML
+        console.log(a);
+        b = JSON.parse(a)
+        console.log(b);
+    }
+</script>
+{% endblock head %}
+
+{% block body %}
+<div class="cont">
+    <div class="flexbox">
+        <h1 class="heading">Invoices</h1>
+        <button class="editbtn" onclick="printbill()">Print</button>
+    </div>
+    <div>
+        <b>Date_Time:</b> {{salse_details.Date_Time}}<br>
+        <b>Transaction_code:</b> {{salse_details.Transaction_code}}<br>
+        <b>Customers_name:</b> {{salse_details.Customers_name}}<br>
+        <b>Total_items:</b> {{salse_details.Total_items}}<br>
+        <b>Total_ammount:</b> {{salse_details.Total_ammount}}<br>
+    </div>
+
+</div>
+{% endblock body %}

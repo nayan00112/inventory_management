@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{title}}{% endblock title %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<link rel="stylesheet" href="{% static 'css/form.css' %}">
+{% endblock head %}
+
+{% block body %}
+<div class="cont">
+    {% if user.is_authenticated %}
+    <h1 class="heading">
+        Inventory Management
+    </h1>
+    <hr>
+    <p>
+        Our Inventory Management system provides a robust platform for efficient stock control. Users can effortlessly categorize products, facilitating streamlined organization. By meticulously tracking product details and sales, businesses can make informed decisions. The system empowers users to maintain optimal stock levels by allowing for the addition and removal of products as needed, ensuring accurate inventory data at all times.
+    </p>
+    
+    
+    {% else %}
+    <div class="divbox">
+        <div class="flexbox">
+            <h1 class="heading">Login First</h1>
+        </div>
+        <form class='form' method="post" action="/account/login">
+            {% csrf_token %}
+            <label for="name">Username:</label>
+            <input type="text" id="username" name="uname">
+            <label for="password">Password:</label>
+            <input type='password' id="password" name="password">
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+    {% endif %}
+</div>
+{% endblock body %}
