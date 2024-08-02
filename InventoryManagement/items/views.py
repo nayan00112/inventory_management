@@ -79,7 +79,7 @@ def products(request):
 def add_product(request):
     active_products = "active"
     catory = Categories.objects.all()
-    context = {"active_categories":active_products, 'catory': catory}
+    context = {"active_products":active_products, 'catory': catory}
     if request.method == "POST":
         Name = request.POST["name"]
         Description = request.POST['description']
