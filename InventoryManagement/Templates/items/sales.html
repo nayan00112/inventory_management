@@ -6,14 +6,44 @@
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
 <link rel="stylesheet" href="{% static 'css/form.css' %}">
 <script>
+    let btnstatus = 0
     let a = 1
     let sum = 0
-    function change_qtn(inp_id, total_id, price_element) {
+    function change_qtn(inp_id, total_id, price_element, asnumber, qinput) {
         try {
             let price = document.getElementById(price_element).innerHTML
             let q = document.getElementById(inp_id).value
+            let asq = document.getElementById(asnumber).innerHTML
+            if (Number(asq) < Number(q)) {
+                document.getElementById(qinput).innerHTML = "<b style='color:red;'>Stock overflow</b>"
+                let bsubmit = document.getElementById('subtn')
+                btnstatus = 1
+            }
+            else {
+                btnstatus = 0
+
+            }
+            if (btnstatus == 0) {
+                try {
+                    let bsubmit = document.getElementById('subtn')
+                    bsubmit.removeAttribute("disabled")
+                    document.getElementById(qinput).innerHTML = "<b style='color:red;'></b>"
+
+                } catch (error) {
+
+                }
+            }
+            if (btnstatus == 1) {
+                try {
+                    let bsubmit = document.getElementById('subtn')
+                    bsubmit.setAttribute("disabled", "disabled");
+                } catch (error) {
+
+                }
+            }
             let ans = Number(price) * Number(q);
             document.getElementById(total_id).innerHTML = ans
+
         }
         catch (e) {
             console.log("error", e);
@@ -43,7 +73,7 @@
         }
         else {
             let a = document.createElement('tr')
-            a.innerHTML = `<td id="p${count}">${count}</td><td><input type="number" value="0"  onkeyup="change_qtn('inp${count}','total${count}','price_${count}')" id="inp${count}" class = 'td_qtn'></td><td class = 'td_product'>${itm[0]}</td><td id="price_${count}" class = 'td_price'>${itm[1]}</td><td class='total_class' id="total${count}">0</td>`
+            a.innerHTML = `<td id="p${count}">${count}</td><td><input type="number" value="0"  onchange="change_qtn('inp${count}','total${count}','price_${count}', 'astock_${count}', 'qinput${count}')" id="inp${count}" class = 'td_qtn'><span  id = "qinput${count}"></span></td><td id="astock_${count}">${itm[2]}</td><td class = 'td_product'>${itm[0]}</td><td id="price_${count}" class = 'td_price'>${itm[1]}</td><td class='total_class' id="total${count}">0</td>`
             count += 1
             document.getElementById('table_head').appendChild(a)
             let r_element = document.getElementsByClassName('p_options')
@@ -90,23 +120,25 @@
 
     }
 
-    function dcrement_products_items(productname, qtl){
+    function dcrement_products_items(productname, qtl) {
         var xhr = new XMLHttpRequest();
-                var url = "/decrement_product";
-                xhr.open("POST", url, true);
-                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        var url = "/decrement_product";
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
-                var csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-                xhr.setRequestHeader("X-CSRFToken", csrfToken);
+        var csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        xhr.setRequestHeader("X-CSRFToken", csrfToken);
 
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState === 4 && xhr.status === 200) {
-                        
-                    }
-                };
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                if (xhr.responseText == "true") {
 
-                var data = "product=" + encodeURIComponent(productname.innerHTML) + "&qtl=" + encodeURIComponent(qtl.value);
-                xhr.send(data);
+                }
+            }
+        };
+
+        var data = "product=" + encodeURIComponent(productname.innerHTML) + "&qtl=" + encodeURIComponent(qtl.value);
+        xhr.send(data);
     }
 
 
@@ -172,7 +204,7 @@
 <div class="cont">
     <div class="flexbox">
         <h1 class="heading">Sales Transaction</h1>
-        <button class="btn" onclick="preparedsubmit()">Submit</button>
+        <button class="btn" onclick="preparedsubmit()" id="subtn">Submit</button>
     </div>
     {% if products %}
     <form class='form' method="post">
@@ -185,7 +217,8 @@
             <select name="product" id="product">
                 <option value="-- SELECT --">-- SELECT --</option>
                 {% for product in products %}
-                <option value="{{product}}|{{product.Price}}" class="p_options">{{product}}</option>
+                <option value="{{product}}|{{product.Price}}|{{ product.inventory_set.all.0.Available_Stock }}"
+                    class="p_options">{{product}}</option>
                 {% endfor %}
             </select>
             <button type="button" onclick="add_product_to_list()" id='add_product'>Add Product</button>
@@ -197,6 +230,7 @@
                 <tr>
                     <th>Sr. No.</th>
                     <th>QTY</th>
+                    <th>Avaliable stock</th>
                     <th>Product</th>
                     <th>Price</th>
                     <th>Total</th>
@@ -205,7 +239,7 @@
             <tbody id="table_head">
             </tbody>
             <tr>
-                <td colspan="4" style="text-align: center;"><b>Total</b></td>
+                <td colspan="5" style="text-align: center;"><b>Total</b></td>
                 <td id="total_price" style="text-align: center;">0</td>
             </tr>
         </table>

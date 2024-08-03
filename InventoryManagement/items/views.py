@@ -162,31 +162,41 @@ def edit_inventory(request, i_id):
 def sales(request):
     active_sales = "active"
     products = Products.objects.all()
-
+    
     context = {"active_sales":active_sales, 'products':products}
     return render(request, 'items/sales.html', context)
     
 
 
 def decrement_product(request):
-    print('dcr')
+    
     if request.method == "POST":
         product = request.POST.get('product')
         qtl = request.POST.get('qtl', 0)
 
-        print(qtl)
-        print(product)
         l = Products.objects.get(Name = product)
         astock = Inventory.objects.get(Products = l)
         
-        if astock.Available_Stock > int(qtl):
+        if astock.Available_Stock >= int(qtl):
+            print("BIG")
+            print(astock.Available_Stock , int(qtl))
             astock.Available_Stock -= int(qtl)
             astock.save()
             print('success')
+        elif astock.Available_Stock < int(qtl):
+            print(astock.Available_Stock , int(qtl))
+            print("small")
+
+        
+            return HttpResponse('false')
+        
         else:
             print('error')
             messages.error(request, "Stock not avaliable")
-    return HttpResponse('')
+            return render(request, 'items/sales.html')
+            return HttpResponse('true')
+            
+    return HttpResponse('true')
         
 
 
